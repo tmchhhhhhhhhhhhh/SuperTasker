@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>SuperTasker</title>
+{% endblock %}
+
+{% block body %}
+<h1 class="text-center mb-4">SuperTasker</h1>
+
+{% if tasks | length == 0 %}
+<div class="alert alert-info text-center">
+    Нет задач. Добавьте первую!
+</div>
+{% else %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h2 class="card-title">Ваши задачи:</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.due_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>
+                        <a href="{{ url_for('delete_task', task_name=task.name) }}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{{ url_for('update_task', task_name=task.name) }}" class="btn btn-primary btn-sm">Update</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<div class="card p-4">
+    <h2 class="card-title">Добавить новую задачу</h2>
+    <form action="/" method="POST">
+        <div class="mb-3">
+            <input type="text" class="form-control" name="task_name" placeholder="Task Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="number" class="form-control" name="task_priority" placeholder="Priority 0-10" min="0" max="10" required>
+        </div>
+        <div class="mb-3">
+            <select class="form-select" name="task_status" required>
+                <option value="В процессе">В процессе</option>
+                <option value="Сделано">Сделано</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Add Task</button>
+    </form>
+</div>
+{% endblock %}
